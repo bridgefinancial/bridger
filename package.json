@@ -1,0 +1,6 @@
+{
+  "name": "bridger-site",
+  "private": true,
+  "type": "module",
+  "description": "The Bridger landing page. Static HTML with one serverless function for the contact form."
+}
