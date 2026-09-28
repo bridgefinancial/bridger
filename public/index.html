@@ -1382,8 +1382,10 @@
     position: relative;
     aspect-ratio: 1 / 1;
     border-radius: 18px;
-    background: #E88B2C;
   }
+
+  .tcard--purple .tcard__block { background: #6a5ace; }
+  .tcard--orange .tcard__block { background: #E88B2C; }
 
   /* The portrait is taller than its block, so the head clears the top. */
   .tcard__photo {
@@ -1398,7 +1400,8 @@
     background-repeat: no-repeat;
   }
 
-  .tcard__photo { background-image: url("assets/img/team-2.png"); }
+  .tcard--purple .tcard__photo { background-image: url("assets/img/team-jongwoo.png"); }
+  .tcard--orange .tcard__photo { background-image: url("assets/img/team-sean.png"); }
 
   .tcard__name {
     font-family: "Sora", system-ui, sans-serif;
@@ -2794,9 +2797,15 @@
     </p>
 
     <div class="team__grid">
-      <article class="tcard">
+      <article class="tcard tcard--purple">
         <div class="tcard__block"><span class="tcard__photo" role="img" aria-label="Portrait of Jongwoo Lim"></span></div>
         <p class="tcard__name">Jongwoo Lim</p>
+        <p class="tcard__role">Full-stack engineer</p>
+      </article>
+
+      <article class="tcard tcard--orange">
+        <div class="tcard__block"><span class="tcard__photo" role="img" aria-label="Portrait of Sean Parker"></span></div>
+        <p class="tcard__name">Sean Parker</p>
         <p class="tcard__role">Full-stack engineer</p>
       </article>
     </div>
