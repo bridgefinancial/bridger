@@ -1,0 +1,9 @@
+# No build step: the page is plain HTML and is served as it sits in public/.
+# The function keeps the source out of that folder, so it is never served as a
+# static file.
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

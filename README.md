@@ -7,19 +7,23 @@ One static page and one serverless function. There is no framework and no build
 step: what is in this repo is what gets served.
 
 ```
-index.html          the whole page, CSS and JS inline
-assets/img/         screenshots, people, the brand mark, the OG card
-assets/fonts/       Manrope and Sora, self-hosted (no Google Fonts link)
-api/contact.js      receives the contact form, mails it on through Resend
+public/index.html             the whole page, CSS and JS inline
+public/assets/img/            screenshots, people, the brand mark, the OG card
+public/assets/fonts/          Manrope and Sora, self-hosted (no Google Fonts link)
+netlify/functions/contact.mjs receives the contact form, mails it on through Resend
+netlify.toml                  what to publish and where the function lives
 ```
+
+`public/` is what gets served. The function sits outside it so its source is
+never handed out as a static file.
 
 ## Working on it
 
-Open `index.html` in a browser. That is the whole loop for anything except the
-form, which needs the function running:
+Open `public/index.html` in a browser. That is the whole loop for anything
+except the form, which needs the function running:
 
 ```sh
-npx vercel dev
+npx netlify dev
 ```
 
 Edits are plain HTML and CSS in one file. The CSS sits above the markup it
@@ -27,9 +31,10 @@ styles so a slow connection never paints unstyled content.
 
 ## Deploying
 
-Vercel builds from `main`. Pushing deploys.
+Netlify builds from `main`. Pushing deploys. There is no build command; the
+contents of `public/` are published as they are.
 
-The contact form needs three environment variables set in the Vercel project.
+The contact form needs three environment variables set in the Netlify site.
 They are not in this repo:
 
 | Variable | What it is |
