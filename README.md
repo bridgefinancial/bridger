@@ -39,7 +39,8 @@ They are not in this repo:
 | `CONTACT_FROM` | the From address, on a domain verified in Resend |
 
 Without them `/api/contact` returns 500 and the page shows its failure line, so
-a missing variable is visible rather than silent.
+a missing variable is visible rather than silent. `CONTACT_FROM` has to sit on
+a domain verified in Resend, currently `getbridger.ai`.
 
 ## How the form behaves
 
