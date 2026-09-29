@@ -1101,7 +1101,11 @@
   .hiw__chart { position: relative; margin-top: 52px; }
 
   /* The vertical guides the steps and bars are measured against. */
-  .hiw__grid { position: absolute; inset: 0 0 26px; pointer-events: none; }
+  .hiw__grid { display: none; position: absolute; inset: 0 0 26px; pointer-events: none; }
+
+  @media (min-width: 768px) {
+    .hiw__grid { display: block; }
+  }
 
   .hiw__grid span {
     position: absolute;
@@ -1126,19 +1130,34 @@
 
   .hstep { min-width: 0; }
 
-  /* Stands in for the bars and axis while they are hidden: the order and the
-     share of the timeline, said per step instead of drawn under the row. */
-  .hstep__no {
-    margin: 0 0 10px;
-    font-size: 0.6875rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
+  /* The order, worn by the sketch itself: a hand-drawn ring in the corner,
+     numbered, in the same wobbly stroke as the drawings. */
+  .hstep__badge {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    font-family: "Sora", system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink);
   }
 
-  @media (min-width: 768px) {
-    .hstep__no { display: none; }
+  .hstep__badge b { position: relative; font-weight: inherit; }
+
+  .hstep__badge svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: #ffffff;
+    stroke: currentColor;
+    stroke-width: 2.6;
+    stroke-linecap: round;
   }
 
   @media (min-width: 768px) {
@@ -2759,8 +2778,8 @@
 
       <div class="hiw__steps">
         <article class="hstep">
-          <p class="hstep__no">Step 1 · 0-25%</p>
           <div class="hart hart--1">
+            <span class="hstep__badge" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M17.4 3.1 C 25.2 2.6, 30.8 9.2, 30.9 16.8 C 31.1 24.9, 24.8 31.3, 17.1 30.9 C 9.3 31.2, 3.1 24.6, 3.2 17.2 C 2.9 9.4, 9.6 3.6, 17.4 3.1"/></svg><b>1</b></span>
             <svg viewBox="0 0 170 128" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="A hand-drawn light bulb that fills with light">
               <defs>
                 <clipPath id="bulbGlass">
@@ -2789,8 +2808,8 @@
         </article>
 
         <article class="hstep">
-          <p class="hstep__no">Step 2 · 25-50%</p>
           <div class="hart hart--2">
+            <span class="hstep__badge" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M17.4 3.1 C 25.2 2.6, 30.8 9.2, 30.9 16.8 C 31.1 24.9, 24.8 31.3, 17.1 30.9 C 9.3 31.2, 3.1 24.6, 3.2 17.2 C 2.9 9.4, 9.6 3.6, 17.4 3.1"/></svg><b>2</b></span>
             <svg viewBox="0 0 170 128" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="A hand-drawn wireframe of a page">
               <path d="M18 16 C 66 13, 122 14, 152 17 C 155 50, 154 92, 151 114 C 100 117, 54 116, 19 113 C 16 82, 16 46, 18 16" />
               <path d="M18 38 C 66 35, 122 36, 152 38" />
@@ -2809,8 +2828,8 @@
         </article>
 
         <article class="hstep">
-          <p class="hstep__no">Step 3 · 50-75%</p>
           <div class="hart hart--3">
+            <span class="hstep__badge" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M17.4 3.1 C 25.2 2.6, 30.8 9.2, 30.9 16.8 C 31.1 24.9, 24.8 31.3, 17.1 30.9 C 9.3 31.2, 3.1 24.6, 3.2 17.2 C 2.9 9.4, 9.6 3.6, 17.4 3.1"/></svg><b>3</b></span>
             <svg viewBox="0 0 170 128" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="The same page, now built and in colour">
               <path d="M18 16 C 66 13, 122 14, 152 17 C 155 50, 154 92, 151 114 C 100 117, 54 116, 19 113 C 16 82, 16 46, 18 16" fill="#ffffff" />
               <path d="M18 16 C 66 13, 122 14, 152 17 C 153 26, 153 32, 152 38 C 100 41, 54 40, 18 38 C 17 30, 17 22, 18 16" fill="#FEF3E2" />
@@ -2830,8 +2849,8 @@
         </article>
 
         <article class="hstep">
-          <p class="hstep__no">Step 4 · 75-100%</p>
           <div class="hart hart--4">
+            <span class="hstep__badge" aria-hidden="true"><svg viewBox="0 0 34 34"><path d="M17.4 3.1 C 25.2 2.6, 30.8 9.2, 30.9 16.8 C 31.1 24.9, 24.8 31.3, 17.1 30.9 C 9.3 31.2, 3.1 24.6, 3.2 17.2 C 2.9 9.4, 9.6 3.6, 17.4 3.1"/></svg><b>4</b></span>
             <svg viewBox="0 0 170 128" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="The same page again, with real data in it and people using it">
               <path d="M18 16 C 66 14, 122 15, 152 17 C 154 50, 154 92, 151 114 C 100 116, 54 116, 19 113 C 17 82, 17 46, 18 16" fill="#ffffff" />
               <path d="M18 16 C 66 14, 122 15, 152 17 C 153 26, 153 32, 152 38 C 100 40, 54 40, 18 38 C 17 30, 17 22, 18 16" fill="#FBE4C8" />
