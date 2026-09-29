@@ -1609,14 +1609,15 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 56px;
+    width: 120px;
     pointer-events: none;
     z-index: 1;
+    display: none;
   }
 
   @media (min-width: 768px) {
     .wshots-wrap::before,
-    .wshots-wrap::after { width: 120px; }
+    .wshots-wrap::after { display: block; }
   }
 
   .wshots-wrap::before {
@@ -1634,10 +1635,10 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
-    display: grid;
+    display: none;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     border: 1px solid var(--line-soft);
     border-radius: 999px;
     background: #fff;
@@ -1647,15 +1648,12 @@
     transition: opacity 0.18s ease;
   }
 
-  .track-nav--prev { left: 8px; }
-  .track-nav--next { right: 8px; }
-  .track-nav .icon { width: 20px; height: 20px; }
+  .track-nav--prev { left: 14px; }
+  .track-nav--next { right: 14px; }
+  .track-nav .icon { width: 26px; height: 26px; }
 
   @media (min-width: 768px) {
-    .track-nav { width: 46px; height: 46px; }
-    .track-nav--prev { left: 14px; }
-    .track-nav--next { right: 14px; }
-    .track-nav .icon { width: 26px; height: 26px; }
+    .track-nav { display: grid; }
   }
 
   /* The shots sit on their own track, so it reads as a gallery rather than
@@ -1786,10 +1784,10 @@
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    display: grid;
+    display: none;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 56px;
+    height: 56px;
     border: 0;
     border-radius: 999px;
     background: rgba(24, 22, 20, 0.72);
@@ -1797,19 +1795,16 @@
     cursor: pointer;
   }
 
-  .lightbox__nav--prev { left: 8px; }
-  .lightbox__nav--next { right: 8px; }
-  .lightbox__nav .icon { width: 22px; height: 22px; }
+  .lightbox__nav--prev { left: 20px; }
+  .lightbox__nav--next { right: 20px; }
+  .lightbox__nav .icon { width: 26px; height: 26px; }
   .lightbox[data-single] .lightbox__nav { display: none; }
 
   /* Phone-sized controls above; the desktop gets its room back here. */
   @media (min-width: 768px) {
     .lightbox__inner { padding: 28px; }
     .lightbox__close { top: 18px; right: 20px; width: 44px; height: 44px; }
-    .lightbox__nav { width: 56px; height: 56px; }
-    .lightbox__nav--prev { left: 20px; }
-    .lightbox__nav--next { right: 20px; }
-    .lightbox__nav .icon { width: 26px; height: 26px; }
+    .lightbox__nav { display: grid; }
     .lightbox__count { bottom: 22px; }
   }
 
@@ -4327,6 +4322,19 @@
         show(at - 1);
       }
     });
+
+    // A horizontal swipe steps through the shots, which is what lets the
+    // arrows stay off on a phone.
+    var swipeX = null;
+    lightbox.addEventListener("touchstart", function (e) {
+      swipeX = e.touches[0].clientX;
+    }, { passive: true });
+    lightbox.addEventListener("touchend", function (e) {
+      if (swipeX === null) return;
+      var dx = e.changedTouches[0].clientX - swipeX;
+      swipeX = null;
+      if (Math.abs(dx) > 48) show(at + (dx < 0 ? 1 : -1));
+    }, { passive: true });
 
     // Drop the source on close so a reopen never shows the previous shot.
     lightbox.addEventListener("close", function () {
