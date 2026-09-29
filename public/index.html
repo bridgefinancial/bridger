@@ -1753,7 +1753,7 @@
     grid-template-rows: minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr);
     place-items: center;
-    padding: 28px;
+    padding: 14px;
     cursor: zoom-out;
   }
 
@@ -1767,10 +1767,10 @@
 
   .lightbox__close {
     position: fixed;
-    top: 18px;
-    right: 20px;
-    width: 44px;
-    height: 44px;
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
     border: 0;
     border-radius: 999px;
     /* Dark, because it sits over whatever the screenshot happens to be. */
@@ -1788,8 +1788,8 @@
     transform: translateY(-50%);
     display: grid;
     place-items: center;
-    width: 56px;
-    height: 56px;
+    width: 40px;
+    height: 40px;
     border: 0;
     border-radius: 999px;
     background: rgba(24, 22, 20, 0.72);
@@ -1797,15 +1797,26 @@
     cursor: pointer;
   }
 
-  .lightbox__nav--prev { left: 20px; }
-  .lightbox__nav--next { right: 20px; }
-  .lightbox__nav .icon { width: 26px; height: 26px; }
+  .lightbox__nav--prev { left: 8px; }
+  .lightbox__nav--next { right: 8px; }
+  .lightbox__nav .icon { width: 22px; height: 22px; }
   .lightbox[data-single] .lightbox__nav { display: none; }
+
+  /* Phone-sized controls above; the desktop gets its room back here. */
+  @media (min-width: 768px) {
+    .lightbox__inner { padding: 28px; }
+    .lightbox__close { top: 18px; right: 20px; width: 44px; height: 44px; }
+    .lightbox__nav { width: 56px; height: 56px; }
+    .lightbox__nav--prev { left: 20px; }
+    .lightbox__nav--next { right: 20px; }
+    .lightbox__nav .icon { width: 26px; height: 26px; }
+    .lightbox__count { bottom: 22px; }
+  }
 
   .lightbox__count {
     position: fixed;
     left: 50%;
-    bottom: 22px;
+    bottom: 10px;
     transform: translateX(-50%);
     margin: 0;
     padding: 7px 16px;
