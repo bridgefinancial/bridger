@@ -1109,7 +1109,17 @@
   .hiw__grid span:nth-child(4) { left: 75%; }
   .hiw__grid span:nth-child(5) { left: calc(100% - 1px); }
 
-  .hiw__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  /* Two by two on a phone. Four abreast needs more width than a phone has,
+     and a grid item refuses to shrink below its content, so the row was
+     quietly widening the whole page: every centred section then rendered
+     shifted and cropped on the right. */
+  .hiw__steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 12px; }
+
+  .hstep { min-width: 0; }
+
+  @media (min-width: 768px) {
+    .hiw__steps { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  }
 
   .hstep { text-align: center; padding: 0 10px; }
 
@@ -1233,7 +1243,14 @@
     .hstamp { transform: rotate(-12deg); }
   }
 
-  .hiw__bars { position: relative; height: 62px; margin-top: 34px; }
+  /* The bars and axis draw a four-across timeline under the four steps. On a
+     phone the steps sit two by two, the bars line up with nothing, so they
+     stay off until the row is four across again. */
+  .hiw__bars { display: none; position: relative; height: 62px; margin-top: 34px; }
+
+  @media (min-width: 768px) {
+    .hiw__bars { display: block; }
+  }
 
   .hbar {
     position: absolute;
@@ -1322,6 +1339,7 @@
   /* Each label is pinned to its own gridline instead of being spread by
      flexbox, which put the middle three slightly off their dashed lines. */
   .hiw__axis {
+    display: none;
     position: relative;
     height: 1.5em;
     margin-top: 16px;
@@ -1337,6 +1355,10 @@
   .hiw__axis span:nth-child(3) { left: 50%; transform: translateX(-50%); }
   .hiw__axis span:nth-child(4) { left: 75%; transform: translateX(-50%); }
   .hiw__axis span:nth-child(5) { right: 0; }
+
+  @media (min-width: 768px) {
+    .hiw__axis { display: block; }
+  }
 
   @media (min-width: 900px) {
     .hiw { padding-top: 120px; padding-bottom: 120px; }
@@ -1376,7 +1398,11 @@
     color: var(--ink-soft);
   }
 
-  .team__grid { margin-top: 92px; display: grid; gap: 60px 26px; }
+  /* The portrait overhangs its block by 22% of the card's width. Stacked in
+     one column, the next head was landing on the name above it, so both the
+     top margin and the row gap are sized to that overhang plus clearance.
+     From 760px up the three-across rules below take over. */
+  .team__grid { margin-top: calc(22vw + 16px); display: grid; gap: calc(22vw + 16px) 26px; }
 
   .tcard__block {
     position: relative;
