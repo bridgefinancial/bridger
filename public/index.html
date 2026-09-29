@@ -1728,7 +1728,12 @@
     border: 0;
     background: transparent;
     overflow: hidden;
+    overscroll-behavior: contain;
   }
+
+  /* While the viewer is up the page under it is frozen: no scrolling through
+     the backdrop, nothing moving behind the shot. */
+  body.lightbox-open { overflow: hidden; }
 
   .lightbox::backdrop { background: rgba(24, 22, 20, 0.86); }
 
@@ -4301,6 +4306,10 @@
       lightbox.toggleAttribute("data-single", shots.length < 2);
       show(shots.indexOf(shot));
       lightbox.showModal();
+      // Freeze the page under the viewer: no scrolling through the backdrop,
+      // and the strips hold (the drift shares the pointer-hold counter).
+      document.body.classList.add("lightbox-open");
+      held += 1;
     });
 
     lightbox.addEventListener("click", function (event) {
@@ -4336,10 +4345,15 @@
       if (Math.abs(dx) > 48) show(at + (dx < 0 ? 1 : -1));
     }, { passive: true });
 
-    // Drop the source on close so a reopen never shows the previous shot.
-    lightbox.addEventListener("close", function () {
+    // Cleanup watches the open attribute rather than the close event, so it
+    // runs however the dialog was dismissed: the button, the backdrop, ESC.
+    // The source is dropped so a reopen never shows the previous shot.
+    new MutationObserver(function () {
+      if (lightbox.open) return;
       lightboxImg.removeAttribute("src");
-    });
+      document.body.classList.remove("lightbox-open");
+      held = Math.max(0, held - 1);
+    }).observe(lightbox, { attributes: true, attributeFilter: ["open"] });
   })();
 </script>
 
