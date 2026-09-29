@@ -1908,7 +1908,7 @@
      lighter than the span without needing a second colour. */
   /* The wordmark scene is taller than the others, so the footer opens up for
      it instead of the name riding up into the copyright line. */
-  .foot { padding-bottom: 170px; }
+  .foot { padding-bottom: 48px; }
 
   .foot__scene {
     position: absolute;
@@ -1917,7 +1917,7 @@
     bottom: 22px;
     width: 100%;
     height: 112px;
-    display: block;
+    display: none;
     pointer-events: none;
   }
 
@@ -2287,7 +2287,11 @@
     letter-spacing: -0.035em;
   }
 
-  .foot__links { display: flex; flex-wrap: wrap; gap: 20px; }
+  .foot__links { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+
+  @media (min-width: 760px) {
+    .foot__links { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 20px; }
+  }
 
   .foot__links a { color: var(--ink-soft); font-weight: 600; }
 
@@ -2300,7 +2304,7 @@
   @media (min-width: 760px) {
     .cta { margin-top: 104px; padding-top: 56px; padding-bottom: 84px; }
     .foot { padding-top: 56px; padding-bottom: 330px; }
-    .foot__scene { height: 372px; bottom: 0; }
+    .foot__scene { height: 372px; bottom: 0; display: block; }
     .foot__bottom { flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 40px; }
   }
 
