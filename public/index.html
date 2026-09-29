@@ -1139,6 +1139,11 @@
     z-index: 1;
     width: 30px;
     height: 30px;
+    /* A white halo, so where the ring lands on a drawing it reads as a
+       sticker on top of it rather than two lines colliding. */
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3.5px #ffffff;
     display: grid;
     place-items: center;
     font-family: "Sora", system-ui, sans-serif;
