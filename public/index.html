@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Bridger | Websites, mobile apps, and workflow automation</title>
-<meta name="description" content="We build the websites, mobile apps, and workflow automations that take the day to day off your desk, so the business keeps moving when you step away." />
+<title>Bridger | Websites, mobile apps, social media, and workflow automation</title>
+<meta name="description" content="We build and run the websites, mobile apps, social media, and workflow automations that take the day to day off your desk, so the business keeps moving when you step away." />
 <link rel="canonical" href="https://getbridger.ai/" />
 
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://getbridger.ai/" />
 <meta property="og:title" content="Build a business that runs without you" />
-<meta property="og:description" content="We build the websites, mobile apps, and workflow automations that take the day to day off your desk." />
+<meta property="og:description" content="We build and run the websites, mobile apps, social media, and workflow automations that take the day to day off your desk." />
 <meta property="og:image" content="https://getbridger.ai/assets/img/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -624,14 +624,31 @@
   .fart {
     position: relative;
     aspect-ratio: 5 / 4;
-    padding: 30px 26px;
     border-radius: 24px;
     overflow: hidden;
+  }
+
+  /* One fixed canvas per drawing, scaled as a whole to the cell's width
+     (set by the script as --fart-scale). The art inside is laid out against
+     these 400x320, so growing the cell never reflows it. */
+  .fart__stage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    height: 320px;
+    padding: 26px 24px;
+    /* --stage-y lets a drawing pick which band of itself the wide desktop
+       ratio shows; the canvas itself never changes. */
+    transform: translate(-50%, var(--stage-y, -50%)) scale(var(--fart-scale, 1));
   }
 
   .fcell--orange .fart { background: #FBE7CD; }
   .fcell--purple .fart { background: #f1eeff; }
   .fcell--blue   .fart { background: #E6F0FB; }
+  /* The brand's three colours are taken, so the fourth cell sits on the
+     page's own warm stone. */
+  .fcell--stone  .fart { background: #F2EDE4; }
 
   .fcell__title {
     font-family: "Sora", system-ui, sans-serif;
@@ -652,7 +669,6 @@
     font-size: 1.0625rem;
     line-height: 1.6;
     color: var(--ink-soft);
-    max-width: 33ch;
     text-wrap: pretty;
   }
 
@@ -666,8 +682,9 @@
 
   .browser {
     position: absolute;
-    left: 2%;
-    top: 15%;
+    /* Set in from the corner, so the cell's own colour breathes around it. */
+    left: 9%;
+    top: 21%;
     width: 126%;
     border-radius: 14px 14px 0 0;
     background: #ffffff;
@@ -740,10 +757,10 @@
 
   .browser__url svg { width: 12px; height: 12px; }
 
-  .browser__body { padding: 16px 18px 22px; }
+  .browser__body { padding: 11px 18px 18px; }
 
   .browser__h {
-    margin: 0 0 14px;
+    margin: 0 0 9px;
     font-family: "Sora", system-ui, sans-serif;
     font-size: 16px;
     font-weight: 600;
@@ -863,29 +880,152 @@
 
   .fnode--d { left: -6%; top: -25%; }
 
-  /* The run button, as it appears over a node in the builder. */
-  .frun {
+  /* ── Drawing: the posting calendar ───────────────────────────────────
+     A week-grid of planned posts behind, and the next one in front as an
+     Instagram-style card, already filled in and marked Scheduled. Both run
+     past the cell's frame and get cropped by it, like the other drawings. */
+  .cal {
     position: absolute;
-    top: 7px;
-    right: 7px;
-    width: 19px;
-    height: 19px;
-    border-radius: 50%;
-    background: #4088D9;
-    box-shadow: 0 5px 12px -4px rgba(64, 136, 217, 0.8);
+    /* Shallow enough past the edge that the month in the card's own padding
+       never goes with it. */
+    left: 0;
+    top: 7%;
+    width: 70%;
+    padding: 11px 12px 13px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 14px 30px -16px rgba(28, 25, 23, 0.4);
+    transform: rotate(-3.5deg);
   }
 
-  .frun::before {
+  .cal__head {
+    display: flex;
+    /* Clears what the desktop crop takes off the top, and what the tilt
+       shifts the top row left by. */
+    padding: 6px 0 0 8px;
+    margin-bottom: 8px;
+  }
+
+  .cal__month { font-size: 9.5px; font-weight: 800; color: #212121; }
+
+  .cal__days {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    text-align: center;
+    font-size: 6.5px;
+    color: #8d8680;
+    margin-bottom: 4px;
+  }
+
+  .cal__cells {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+  }
+
+  .cal__cells span {
+    aspect-ratio: 1 / 1.15;
+    border-radius: 4px;
+    background: #f6f4f1;
+  }
+
+  .cal__cells .has { position: relative; }
+
+  .cal__cells .has::after {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -3.5px 0 0 -2px;
-    border-style: solid;
-    border-width: 3.5px 0 3.5px 5.5px;
-    border-color: transparent transparent transparent #ffffff;
+    inset: 2px;
+    border-radius: 3px;
   }
 
+  .cal__cells .p1::after { background: linear-gradient(145deg, #FBE7CD, #E88B2C); }
+  .cal__cells .p2::after { background: url("assets/img/social-croissant.webp") 58% 72% / cover; }
+  .cal__cells .p3::after { background: linear-gradient(145deg, #E6F0FB, #4088D9); }
+  .cal__cells .p4::after { background: linear-gradient(145deg, #ded7f8, #6a5ace); }
+  /* Tuesday holds the same shot the post in front carries: that post is
+     what goes out in that slot. */
+  .cal__cells .p5::after { background: url("assets/img/social-tea.webp") center 33% / cover; }
+
+  .post {
+    position: absolute;
+    right: -4%;
+    bottom: 0;
+    width: 54%;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 18px 36px -16px rgba(28, 25, 23, 0.5);
+    transform: rotate(2.5deg);
+    overflow: hidden;
+  }
+
+  .post__acct {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 9px;
+  }
+
+  .post__ava {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 30%, #f6b26b 0 38%, transparent 39%),
+      linear-gradient(135deg, #FBE7CD, #E88B2C);
+  }
+
+  .post__handle { font-size: 7.5px; font-weight: 800; color: #212121; }
+
+  .post__dots { margin-left: auto; font-size: 9px; color: #8d8680; letter-spacing: 1px; }
+
+  .post__pic {
+    aspect-ratio: 16 / 9.5;
+    background: url("assets/img/social-tea.webp") center 34% / cover;
+  }
+
+  .post__icons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 9px 0;
+  }
+
+  .post__icons svg { width: 10px; height: 10px; }
+  .post__icons .post__hrt { color: #e05d5d; }
+  .post__icons .post__mut { color: #78716c; }
+  .post__icons .post__send { margin-left: auto; }
+
+  .post__likes {
+    padding: 5px 9px 0;
+    font-size: 7px;
+    font-weight: 700;
+    color: #212121;
+  }
+
+  .post__sched {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 5px 9px 9px;
+    padding: 3.5px 8px;
+    border-radius: 999px;
+    background: #eaf4ec;
+    color: #1f7a4d;
+    font-size: 7px;
+    font-weight: 800;
+  }
+
+  .post__sched i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #2e9e63;
+    font-style: normal;
+  }
+
+  /* The run button, as it appears over a node in the builder. */
   /* ── Drawing: the marketplace on a phone ─────────────────────────────
      Bridge's mobile marketplace: search field, the listings count with the
      Grid / Map toggle, a listing card and the bottom tab bar. Tilted like
@@ -1066,10 +1206,22 @@
 
   @media (min-width: 900px) {
     .features { padding-top: calc(70px + var(--slab-cut)); padding-bottom: calc(70px + var(--slab-cut)); }
-    .fgrid { grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 64px; }
-    .fart { padding: 36px 34px; border-radius: 28px; }
+    .fgrid { grid-template-columns: repeat(2, 1fr); gap: 56px 30px; margin-top: 64px; }
+    /* Two-across cells at 5/4 towered; lying them down to 8/5 keeps the
+       drawings readable without the section turning monumental. */
+    .fart { border-radius: 28px; aspect-ratio: 8 / 5; }
+    /* What the 8/5 window crops away, per drawing: the chart keeps its axis
+       and sheds the money row; the phone keeps its revenue row and sheds
+       some top chrome. The calendar and post instead pull inside the safe
+       band, since their key lines sit at both ends. */
+    .fart--screen .fart__stage { --stage-y: -48%; }
+    /* The phone's shape is the point: its rounded top and the gap either
+       side stay in view, and the window crops the card's money row instead. */
+    .fcell--purple .fart__stage { --stage-y: -39%; }
+    .fart--flow .fart__stage { --stage-y: -52%; }
+
     .fcell__title { font-size: 2rem; margin-top: 28px; }
-    .fcell__detail { font-size: 1.125rem; max-width: 31ch; }
+    .fcell__detail { font-size: 1.125rem; }
   }
 
   /* ── How it works ────────────────────────────────────────────────────
@@ -1865,6 +2017,7 @@
   /* Cards in a row follow each other instead of landing together. */
   .fcell:nth-child(2), .tcard:nth-child(2), .hstep:nth-child(2) { transition-delay: 80ms; }
   .fcell:nth-child(3), .tcard:nth-child(3), .hstep:nth-child(3) { transition-delay: 160ms; }
+  .fcell:nth-child(4), .hstep:nth-child(4) { transition-delay: 240ms; }
   .hstep:nth-child(4) { transition-delay: 240ms; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -2437,6 +2590,12 @@
     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
     <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
   </symbol>
+  <symbol id="comment" viewBox="0 0 24 24" fill="none">
+    <path d="M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.4L5 21l4-1.7c.9.2 1.9.4 3 .4 5.5 0 10-3.8 10-8.5S17.5 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="send" viewBox="0 0 24 24" fill="none">
+    <path d="M21 3 3 10.5l7 2.5M21 3l-6 18-4.5-8M21 3 10 13" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  </symbol>
   <symbol id="heart-filled" viewBox="0 0 24 24" fill="none">
     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </symbol>
@@ -2510,8 +2669,9 @@
     <div class="shell hero__copy">
       <h1 class="hero__title">Build a business that runs <span class="hl" data-text="without you.">without you.</span></h1>
       <p class="hero__sub">
-        We build the websites, mobile apps, and workflow automations that take the
-        day to day off your desk, so the business keeps moving when you step away.
+        We build and run the websites, mobile apps, social media, and workflow
+        automations that take the day to day off your desk, so the business
+        keeps moving when you step away.
       </p>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#contact">
@@ -2575,7 +2735,7 @@
   <section class="features shell" id="what-we-build">
     <h2 class="features__title">What we build</h2>
     <p class="features__sub">
-      Three things. Start with whichever is costing you the most time, and
+      Four things. Start with whichever is costing you the most time, and
       the rest connect to it later.
     </p>
 
@@ -2583,6 +2743,7 @@
 
       <article class="fcell fcell--orange">
         <div class="fart fart--screen">
+<div class="fart__stage">
           <div class="browser" role="img" aria-label="A browser showing a business valuation screen">
             <div class="browser__tabs">
               <span class="browser__tab"><img class="browser__fav" src="assets/img/icon.png" alt="" width="13" height="13" />Business Valuation</span>
@@ -2656,12 +2817,14 @@
               </div>
             </div>
           </div>
+</div>
         </div>
         <h3 class="fcell__title">Website</h3>
         <p class="fcell__detail">We take it from idea to a working site: design, build, launch. Responsive on every screen, fully maintained from there.</p>
       </article>
       <article class="fcell fcell--purple">
         <div class="fart">
+<div class="fart__stage">
           <div class="phone" role="img" aria-label="The marketplace on a phone, showing a business listing">
             <span class="phone__notch"></span>
 
@@ -2698,22 +2861,23 @@
               <svg aria-hidden="true"><use href="#user"></use></svg>
             </div>
           </div>
+</div>
         </div>
         <h3 class="fcell__title">Mobile app</h3>
         <p class="fcell__detail">Idea to app, live on iPhone and Android. We design it, build it, ship it to both stores, and keep it running.</p>
       </article>
       <article class="fcell fcell--blue">
         <div class="fart fart--flow">
+<div class="fart__stage">
           <div class="flow" role="img" aria-label="A workflow where a booking triggers a confirmation and an invoice">
             <svg class="flow__wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M43.7 60.8 C 50 60.8, 50 52.8, 56.3 52.8" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
-              <path d="M43.7 60.8 C 50 60.8, 50 87.8, 56.3 87.8" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
-              <path d="M43.7 60.8 C 50 60.8, 50 11.8, 56.3 11.8" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
-              <path d="M35.7 0.8 C 44 0.8, 48 11.8, 56.3 11.8" fill="none" stroke="#cfc7f6" stroke-width="1.1" vector-effect="non-scaling-stroke" />
+              <path d="M43.8 59 C 50 59, 50 50.9, 56.2 50.9" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
+              <path d="M43.8 59 C 50 59, 50 85.9, 56.2 85.9" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
+              <path d="M43.8 59 C 50 59, 50 10, 56.2 10" fill="none" stroke="#bdb2f2" stroke-width="1.1" vector-effect="non-scaling-stroke" />
+              <path d="M35.8 -1 C 44 -1, 48 10, 56.2 10" fill="none" stroke="#cfc7f6" stroke-width="1.1" vector-effect="non-scaling-stroke" />
             </svg>
 
             <article class="fnode fnode--trigger">
-              <span class="frun"></span>
               <div class="fnode__head">
                 <span class="fnode__kind">Trigger</span>
                 <p class="fnode__title">Job booked</p>
@@ -2758,9 +2922,43 @@
               <div class="fnode__port fnode__port--in">Booking</div>
             </article>
           </div>
+</div>
         </div>
         <h3 class="fcell__title">Workflow automation</h3>
         <p class="fcell__detail">We take a manual step and make it automatic: map it, build it, wire it in. One less thing your team has to remember.</p>
+      </article>
+
+      <article class="fcell fcell--stone">
+        <div class="fart fart--social">
+<div class="fart__stage">
+          <div class="cal" role="img" aria-label="A week of planned posts on a calendar">
+            <div class="cal__head"><span class="cal__month">October</span></div>
+            <div class="cal__days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span></div>
+            <div class="cal__cells">
+              <span class="has p1"></span><span></span><span class="has p2"></span><span></span><span class="has p3"></span>
+              <span></span><span class="has p5"></span><span></span><span class="has p1"></span><span></span>
+              <span class="has p3"></span><span></span><span class="has p4"></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="post" role="img" aria-label="A social media post of a cup of tea, scheduled for Tuesday at 9 AM">
+            <div class="post__acct">
+              <span class="post__ava"></span>
+              <span class="post__handle">theflourshop</span>
+              <span class="post__dots">&middot;&middot;&middot;</span>
+            </div>
+            <div class="post__pic"></div>
+            <div class="post__icons">
+              <svg class="post__hrt" aria-hidden="true"><use href="#heart-filled"></use></svg>
+              <svg class="post__mut" aria-hidden="true"><use href="#comment"></use></svg>
+              <svg class="post__mut post__send" aria-hidden="true"><use href="#send"></use></svg>
+            </div>
+            <p class="post__likes">Liked by dana.r and 127 others</p>
+            <span class="post__sched"><i></i>Scheduled &middot; Tue 9:00 AM</span>
+          </div>
+</div>
+        </div>
+        <h3 class="fcell__title">Social media</h3>
+        <p class="fcell__detail">We plan the posts, make them, and keep them going out on schedule. Your accounts stay active without you touching them.</p>
       </article>
 
     </div>
@@ -3149,6 +3347,9 @@
 
             <input class="cta__chip-input" id="cf-want-auto" name="want" type="checkbox" value="Workflow automation" />
             <label class="cta__chip" for="cf-want-auto">Workflow automation</label>
+
+            <input class="cta__chip-input" id="cf-want-social" name="want" type="checkbox" value="Social media" />
+            <label class="cta__chip" for="cf-want-social">Social media</label>
 
             <input class="cta__chip-input" id="cf-want-unsure" name="want" type="checkbox" value="Not sure yet" />
             <label class="cta__chip" for="cf-want-unsure">Not sure yet</label>
@@ -3942,6 +4143,22 @@
 
 <script>
   (function () {
+    // Each drawing is one fixed canvas scaled to its cell, so nothing
+    // inside it reflows when the cell changes size.
+    var stages = Array.prototype.slice.call(document.querySelectorAll(".fart"));
+    var fitStages = function () {
+      stages.forEach(function (cell) {
+        cell.style.setProperty("--fart-scale", (cell.clientWidth / 400).toFixed(4));
+      });
+    };
+    fitStages();
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(fitStages);
+      stages.forEach(function (cell) { ro.observe(cell); });
+    } else {
+      window.addEventListener("resize", fitStages);
+    }
+
     // The header carries a rule only once the page has moved.
     var header = document.querySelector(".site-header");
     var onScroll = function () {

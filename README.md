@@ -1,7 +1,8 @@
 # Bridger
 
-The marketing site for Bridger, the Bridge Financial arm that builds websites,
-mobile apps and workflow automation. Lives at **getbridger.ai**.
+The marketing site for Bridger, the Bridge Financial arm that builds and runs
+websites, mobile apps, social media, and workflow automation. Lives at
+**getbridger.ai**.
 
 One static page and one serverless function. There is no framework and no build
 step: what is in this repo is what gets served.
